@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Competition Results</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      padding: 10px;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+      padding-top: 70px;
+    }
+    .navbar {
+      background: #1e3a8a;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+    .navbar-brand, .nav-link {
+      color: #fff !important;
+      font-size: 0.9rem;
+    }
+    .nav-link:hover {
+      color: #93c5fd !important;
+    }
+    .form-section {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 10px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.5s ease-out forwards;
+    }
+    .form-section:nth-child(1) { animation-delay: 0.1s; }
+    .form-section:nth-child(2) { animation-delay: 0.2s; }
+    .form-section:nth-child(3) { animation-delay: 0.3s; }
+    .form-section:hover {
+      transform: translateY(-3px) !important;
+    }
+    #adminSection { display: none; }
+
+    .logo-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 15px 0;
+      position: relative;
+      z-index: 1;
+      animation: fadeIn 0.8s ease-out;
+    }
+    .logo {
+      max-width: 120px;
+      height: auto;
+      transition: transform 0.3s ease;
+    }
+    .logo-left {
+      transform: translateX(-20px);
+      animation: slideInLeft 0.6s ease-out forwards;
+    }
+    .logo-right {
+      transform: translateX(20px);
+      animation: slideInRight 0.6s ease-out forwards;
+    }
+    .logo:hover {
+      transform: scale(1.05) !important;
+    }
+
+    .container {
+      padding-top: 20px;
+      padding-bottom: 120px;
+    }
+    h1 {
+      color: #fff;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+      font-size: 1.8rem;
+      animation: fadeIn 0.8s ease-out;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .results-matrix {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      touch-action: pan-x;
+    }
+    .results-matrix th, .results-matrix td {
+      border: 1px solid #e0e0e0;
+      padding: 10px;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    .results-matrix th {
+      background: #1e3a8a;
+      color: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .results-matrix tr:nth-child(even) {
+      background: #f8fafc;
+    }
+    .results-matrix tr:hover {
+      background: #e0f2fe;
+    }
+    .college-cell {
+      background: #dbeafe;
+      font-weight: 600;
+      text-align: left;
+      position: sticky;
+      left: 0;
+      z-index: 5;
+      min-width: 100px;
+    }
+
+    .category-section {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 10px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.5s ease-out forwards;
+    }
+    .category-section:nth-child(1) { animation-delay: 0.4s; }
+    .category-section:nth-child(2) { animation-delay: 0.5s; }
+    .category-section:nth-child(3) { animation-delay: 0.6s; }
+    .category-title {
+      color: #1e3a8a;
+      border-bottom: 2px solid #93c5fd;
+      padding-bottom: 8px;
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+    }
+
+    .points-input {
+      width: 60px;
+      text-align: center;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      padding: 5px;
+    }
+    .points-input:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 4px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-primary, .btn-admin, .btn-export, .btn-success, .btn-danger, .btn-secondary {
+      border-radius: 6px;
+      padding: 8px 15px;
+      font-size: 0.9rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn-primary {
+      background: #3b82f6;
+      border: none;
+    }
+    .btn-admin, .btn-export {
+      background: #1e3a8a;
+      border: none;
+    }
+    .btn-success {
+      background: #22c55e;
+    }
+    .btn-danger {
+      background: #ef4444;
+    }
+    .btn-primary:hover, .btn-admin:hover, .btn-export:hover, .btn-success:hover, .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    }
+
+    .modal-content {
+      border-radius: 10px;
+      border: none;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    .modal-header {
+      background: #1e3a8a;
+      color: #fff;
+      border-radius: 10px 10px 0 0;
+      font-size: 1rem;
+    }
+    .modal-body {
+      font-size: 0.9rem;
+    }
+    .modal-footer .btn {
+      font-size: 0.9rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeInUp {
+      from { 
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes slideInLeft {
+      from { 
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    @keyframes slideInRight {
+      from { 
+        opacity: 0;
+        transform: translateX(50px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @media (max-width: 576px) {
+      body {
+        padding: 8px;
+        padding-top: 60px;
+      }
+      .container {
+        padding-top: 10px;
+        padding-bottom: 150px;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+      .logo-container {
+        margin: 10px 0;
+      }
+      .logo {
+        max-width: 90px;
+      }
+      .form-section, .category-section {
+        padding: 12px;
+      }
+      .results-matrix {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .results-matrix th, .results-matrix td {
+        font-size: 0.8rem;
+        padding: 8px;
+      }
+      .points-input {
+        width: 50px;
+        font-size: 0.8rem;
+      }
+      .btn {
+        padding: 7px 12px;
+        font-size: 0.8rem;
+      }
+      .form-select, .form-control {
+        font-size: 0.9rem;
+      }
+      .category-title {
+        font-size: 1rem;
+      }
+      .navbar-brand, .nav-link {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Competition System</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="https://snec-students-organization.github.io/individual/">Individual</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" onclick="showPinModal()">Admin Access</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="logo-container">
+    <img src="image\sa_pho-removebg-preview.png" alt="Competition Logo 1" class="logo logo-left">
+    <img src="image\SHAREE'A (1).png" alt="Competition Logo 2" class="logo logo-right">
+  </div>
+  
+  <div class="container">
+    <h1 class="text-center mb-4">College Competition Points System</h1>
+
+    <!-- User View Section -->
+    <section class="form-section">
+      <h2 class="mb-3">View Results</h2>
+      <div class="row g-2">
+        <div class="col-12 col-md-4">
+          <label for="fStream" class="form-label">Stream:</label>
+          <select class="form-select" id="fStream">
+            <option value="">All Streams</option>
+            <option value="Shareea">Shareea</option>
+            <option value="Shareea Plus">Shareea Plus</option>
+            <option value="Life">Life</option>
+            <option value="SHE">SHE</option>
+            <option value="SHE Plus">SHE Plus</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-4" id="fCategoryField" style="display:none;">
+          <label for="fCategory" class="form-label">Category:</label>
+          <select class="form-select" id="fCategory">
+            <option value="">All Categories</option>
+            <option value="Sanaviyya">Sanaviyya</option>
+            <option value="Bakalooriyya">Bakalooriyya</option>
+            <option value="PG">PG</option>
+          </select>
+        </div>
+        <div class="col-12">
+          <button type="button" class="btn btn-primary" onclick="filterResults()">View Results</button>
+          <button type="button" class="btn btn-secondary ms-2" onclick="resetFilters()">Reset Filters</button>
+          <button type="button" class="btn btn-export ms-2" onclick="exportToPDF()">Export to PDF</button>
+        </div>
+      </div>
+
+      <div id="resultsContainer" class="mt-3"></div>
+      <div class="alert alert-warning mt-3" id="noResultsAlert" style="display:none;">
+        No results found matching your criteria.
+      </div>
+    </section>
+
+    <!-- Admin Upload Section -->
+    <section class="form-section" id="adminSection">
+      <h2 class="mb-3">Manage Competition</h2>
+      <div class="row g-2">
+        <div class="col-12 col-md-4">
+          <label for="compItem" class="form-label">Add New Competition Item:</label>
+          <div class="input-group">
+            <input type="text" class="form-control" id="compItem" placeholder="Enter item name">
+            <button class="btn btn-success" type="button" onclick="addCompetitionItem()">Add</button>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <label for="removeItem" class="form-label">Remove Competition Item:</label>
+          <div class="input-group">
+            <select class="form-select" id="removeItem">
+              <option value="">Select item to remove</option>
+            </select>
+            <button class="btn btn-danger" type="button" onclick="removeCompetitionItem()">Remove</button>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <label for="college" class="form-label">Add New College:</label>
+          <div class="input-group">
+            <input type="text" class="form-control" id="college" placeholder="Enter college name">
+            <select class="form-select" id="collegeStream" style="max-width: 120px;">
+              <option value="Shareea">Shareea</option>
+              <option value="Shareea Plus">Shareea Plus</option>
+              <option value="Life">Life</option>
+              <option value="SHE">SHE</option>
+              <option value="SHE Plus">SHE Plus</option>
+            </select>
+            <button class="btn btn-success" type="button" onclick="addCollege()">Add</button>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <label for="removeCollege" class="form-label">Remove College:</label>
+          <div class="input-group">
+            <select class="form-select" id="removeCollegeStream" onchange="updateRemoveCollegeDropdown()">
+              <option value="Shareea">Shareea</option>
+              <option value="Shareea Plus">Shareea Plus</option>
+              <option value="Life">Life</option>
+              <option value="SHE">SHE</option>
+              <option value="SHE Plus">SHE Plus</option>
+            </select>
+            <select class="form-select" id="removeCollege">
+              <option value="">Select college to remove</option>
+            </select>
+            <button class="btn btn-danger" type="button" onclick="removeCollege()">Remove</button>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <label for="stream" class="form-label">Select Stream to Edit:</label>
+          <select class="form-select" id="stream" onchange="updateAdminMatrix()">
+            <option value="Shareea">Shareea</option>
+            <option value="Shareea Plus">Shareea Plus</option>
+            <option value="Life">Life</option>
+            <option value="SHE">SHE</option>
+            <option value="SHE Plus">SHE Plus</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-4" id="categoryField">
+          <label for="category" class="form-label">Category:</label>
+          <select class="form-select" id="category" onchange="updateAdminMatrix()">
+            <option value="Sanaviyya">Sanaviyya</option>
+            <option value="Bakalooriyya">Bakalooriyya</option>
+            <option value="PG">PG</option>
+          </select>
+        </div>
+        <div class="col-12">
+          <button type="button" class="btn btn-danger" onclick="clearAllData()">Clear All Data</button>
+          <button type="button" class="btn btn-secondary ms-2" onclick="exitAdmin()">Exit Admin Mode</button>
+        </div>
+      </div>
+      
+      <h3 class="mt-3">Assign Points</h3>
+      <div class="table-responsive">
+        <table class="results-matrix" id="adminMatrix">
+          <thead>
+            <tr>
+              <th>College \ Item</th>
+            </tr>
+          </thead>
+          <tbody id="adminMatrixBody"></tbody>
+        </table>
+      </div>
+      <div class="mt-2">
+        <button type="button" class="btn btn-primary" onclick="savePoints()">Save All Points</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Password Entry Modal -->
+  <div class="modal fade" id="pinModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Admin Access</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label for="adminPassword" class="form-label">Enter Password (up to 8 characters):</label>
+          <input type="password" class="form-control" id="adminPassword" maxlength="8" placeholder="Password">
+          <div class="invalid-feedback" id="passwordError"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="checkPassword()">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clear Data Confirmation Modal -->
+  <div class="modal fade" id="clearModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirm Clear All Data</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to clear ALL data? This action cannot be undone.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger" id="confirmClear">Clear All Data</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    const { jsPDF } = window.jspdf;
+    const validStreams = ["Shareea", "Shareea Plus", "Life", "SHE", "SHE Plus"];
+    const categories = ["Sanaviyya", "Bakalooriyya", "PG"];
+    const API_BASE_URL = 'http://localhost:5000/api'; // Update this in production
+
+    // DOM Elements
+    const clearModal = new bootstrap.Modal(document.getElementById('clearModal'));
+    const pinModal = new bootstrap.Modal(document.getElementById('pinModal'));
+
+    // Global state
+    let currentAdminStream = "Shareea";
+    let currentAdminCategory = "Sanaviyya";
+
+    $(document).ready(function() {
+        // Initialize UI elements
+        $('#stream').change(function() {
+            currentAdminStream = $(this).val();
+            $('#categoryField').toggle(currentAdminStream === "Shareea" || currentAdminStream === "SHE");
+            updateAdminMatrix();
+        });
+
+        $('#category').change(function() {
+            currentAdminCategory = $(this).val();
+            updateAdminMatrix();
+        });
+
+        $('#fStream').change(function() {
+            const stream = $(this).val();
+            $('#fCategoryField').toggle(stream === "Shareea" || stream === "SHE");
+            if (!stream) $('#fCategory').val('');
+        });
+
+        // Initialize data displays
+        updateAdminMatrix();
+        updateResultsView();
+        updateRemoveDropdowns();
+        updateRemoveCollegeDropdown();
+
+        // Set up clear confirmation
+        $('#confirmClear').click(function() {
+            clearAllData();
+        });
+    });
+
+    // API Functions
+    async function fetchCompetitionItems() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/items`);
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching items:', error);
+            showAlert('Failed to load competition items.', 'danger');
+            return [];
+        }
+    }
+
+    async function fetchColleges(stream) {
+        try {
+            const response = await fetch(`${API_BASE_URL}/colleges/stream/${encodeURIComponent(stream)}`);
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching colleges:', error);
+            showAlert('Failed to load colleges.', 'danger');
+            return [];
+        }
+    }
+
+    async function fetchPoints() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/points`);
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching points:', error);
+            showAlert('Failed to load points data.', 'danger');
+            return [];
+        }
+    }
+
+    async function fetchResults(stream, category) {
+        try {
+            let url = `${API_BASE_URL}/results?stream=${encodeURIComponent(stream)}`;
+            if (category) url += `&category=${encodeURIComponent(category)}`;
+            
+            const response = await fetch(url);
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching results:', error);
+            showAlert('Failed to load results.', 'danger');
+            return null;
+        }
+    }
+
+    async function addCompetitionItem() {
+        const itemName = $('#compItem').val().trim();
+        const stream = $('#stream').val();
+        const category = $('#category').val();
+        
+        if (!itemName) {
+            showAlert('Please enter an item name.', 'warning');
+            return;
+        }
+        if (!stream || !validStreams.includes(stream)) {
+            showAlert('Please select a valid stream.', 'warning');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/items`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: itemName,
+                    stream: stream,
+                    category: (stream === "Shareea" || stream === "SHE") ? category : null
+                }),
+            });
+
+            if (response.ok) {
+                $('#compItem').val('');
+                updateAdminMatrix();
+                updateResultsView();
+                updateRemoveDropdowns();
+                showAlert('Item added!', 'success');
+            } else {
+                const error = await response.json();
+                showAlert(error.message || 'Failed to add item.', 'danger');
+            }
+        } catch (error) {
+            console.error('Error adding item:', error);
+            showAlert('Failed to add item.', 'danger');
+        }
+    }
+
+    async function removeCompetitionItem() {
+        const itemId = $('#removeItem').val();
+        if (!itemId) {
+            showAlert('Please select an item to remove.', 'warning');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/items/${itemId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                updateAdminMatrix();
+                updateResultsView();
+                updateRemoveDropdowns();
+                showAlert('Item removed!', 'success');
+            } else {
+                const error = await response.json();
+                showAlert(error.message || 'Failed to remove item.', 'danger');
+            }
+        } catch (error) {
+            console.error('Error removing item:', error);
+            showAlert('Failed to remove item.', 'danger');
+        }
+    }
+
+    async function addCollege() {
+        const collegeName = $('#college').val().trim();
+        const stream = $('#collegeStream').val();
+        
+        if (!collegeName) {
+            showAlert('Please enter a college name.', 'warning');
+            return;
+        }
+        if (!stream || !validStreams.includes(stream)) {
+            showAlert('Please select a valid stream.', 'warning');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/colleges`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: collegeName,
+                    stream: stream
+                }),
+            });
+
+            if (response.ok) {
+                $('#college').val('');
+                updateAdminMatrix();
+                updateResultsView();
+                updateRemoveCollegeDropdown();
+                showAlert(`College "${collegeName}" added to ${stream}!`, 'success');
+            } else {
+                const error = await response.json();
+                showAlert(error.message || 'Failed to add college.', 'danger');
+            }
+        } catch (error) {
+            console.error('Error adding college:', error);
+            showAlert('Failed to add college.', 'danger');
+        }
+    }
+
+    async function removeCollege() {
+        const collegeId = $('#removeCollege').val();
+        if (!collegeId) {
+            showAlert('Please select a college to remove.', 'warning');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/colleges/${collegeId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                updateAdminMatrix();
+                updateResultsView();
+                updateRemoveCollegeDropdown();
+                showAlert('College removed!', 'success');
+            } else {
+                const error = await response.json();
+                showAlert(error.message || 'Failed to remove college.', 'danger');
+            }
+        } catch (error) {
+            console.error('Error removing college:', error);
+            showAlert('Failed to remove college.', 'danger');
+        }
+    }
+
+    async function savePoints() {
+        const pointsToSave = [];
+        
+        $('.points-input').each(function() {
+            const collegeId = $(this).data('college');
+            const itemId = $(this).data('item');
+            const points = $(this).val();
+            
+            if (collegeId && itemId && points) {
+                pointsToSave.push({
+                    collegeId,
+                    itemId,
+                    points: parseInt(points)
+                });
+            }
+        });
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/points`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(pointsToSave),
+            });
+
+            if (response.ok) {
+                updateResultsView();
+                showAlert('Points saved!', 'success');
+            } else {
+                const error = await response.json();
+                showAlert(error.message || 'Failed to save points.', 'danger');
+            }
+        } catch (error) {
+            console.error('Error saving points:', error);
+            showAlert('Failed to save points.', 'danger');
+        }
+    }
+
+    async function updateAdminMatrix() {
+        const stream = currentAdminStream;
+        const category = currentAdminCategory;
+        
+        try {
+            const [items, colleges] = await Promise.all([
+                fetchCompetitionItems(),
+                fetchColleges(stream)
+            ]);
+
+            const filteredItems = items.filter(item => {
+                if (stream === "Shareea" || stream === "SHE") {
+                    return item.stream === stream && item.category === category;
+                } else {
+                    return item.stream === stream;
+                }
+            });
+            
+            const thead = $('#adminMatrix thead tr').empty().append('<th>College \\ Item</th>');
+            const tbody = $('#adminMatrixBody').empty();
+            
+            filteredItems.forEach(item => {
+                thead.append(`<th>${item.name}</th>`);
+            });
+
+            colleges.forEach(college => {
+                const row = $('<tr>').append(`<td class="college-cell">${college.name}</td>`);
+                filteredItems.forEach(item => {
+                    row.append(`
+                        <td>
+                            <input type="number" class="form-control points-input" 
+                                   data-college="${college._id}" 
+                                   data-item="${item._id}"
+                                   value="">
+                        </td>
+                    `);
+                });
+                tbody.append(row);
+            });
+
+            // Load existing points
+            const points = await fetchPoints();
+            points.forEach(point => {
+                $(`input[data-college="${point.collegeId._id}"][data-item="${point.itemId._id}"]`).val(point.points);
+            });
+        } catch (error) {
+            console.error('Error updating admin matrix:', error);
+        }
+    }
+
+    async function updateResultsView() {
+        const container = $('#resultsContainer').empty();
+        const filterStream = $('#fStream').val();
+        const filterCategory = $('#fCategory').val();
+
+        try {
+            if (filterStream === "Shareea" || filterStream === "SHE") {
+                if (filterCategory) {
+                    const results = await fetchResults(filterStream, filterCategory);
+                    if (results) createResultsTable(container, results);
+                } else {
+                    for (const category of categories) {
+                        const results = await fetchResults(filterStream, category);
+                        if (results) createResultsTable(container, results);
+                    }
+                }
+            } else if (filterStream) {
+                const results = await fetchResults(filterStream, "");
+                if (results) createResultsTable(container, results);
+            } else {
+                for (const stream of validStreams) {
+                    if (stream === "Shareea" || stream === "SHE") {
+                        for (const category of categories) {
+                            const results = await fetchResults(stream, category);
+                            if (results) createResultsTable(container, results);
+                        }
+                    } else {
+                        const results = await fetchResults(stream, "");
+                        if (results) createResultsTable(container, results);
+                    }
+                }
+            }
+
+            const hasResults = container.children().length > 0;
+            $('#noResultsAlert').toggle(!hasResults);
+        } catch (error) {
+            console.error('Error updating results view:', error);
+            showAlert('Failed to load results.', 'danger');
+        }
+    }
+
+    function createResultsTable(container, results) {
+        if (!results.colleges.length || !results.items.length) return;
+
+        const section = $(`
+            <div class="category-section">
+                <h3 class="category-title">${results.stream}${results.category ? ` - ${results.category}` : ''}</h3>
+                <div class="table-responsive">
+                    <table class="results-matrix">
+                        <thead><tr><th>College</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        `);
+
+        const table = section.find('table');
+        const thead = table.find('thead tr');
+        const tbody = table.find('tbody');
+
+        results.items.forEach(item => {
+            thead.append(`<th>${item}</th>`);
+        });
+        thead.append('<th>Total</th>');
+
+        results.colleges.forEach(college => {
+            const row = $('<tr>').append(`<td class="college-cell">${college.name}</td>`);
+            let collegeTotal = 0;
+            
+            results.items.forEach(item => {
+                const points = college.points[item] || 0;
+                collegeTotal += points;
+                row.append(`<td>${points || '-'}</td>`);
+            });
+            
+            row.append(`<td class="fw-bold">${collegeTotal}</td>`);
+            tbody.append(row);
+        });
+
+        container.append(section);
+    }
+
+    async function updateRemoveDropdowns() {
+        try {
+            const items = await fetchCompetitionItems();
+            const removeItemSelect = $('#removeItem').empty().append('<option value="">Select item to remove</option>');
+            
+            items.forEach(item => {
+                const displayName = `${item.name} (${item.stream}${item.category ? ` - ${item.category}` : ''})`;
+                removeItemSelect.append(`<option value="${item._id}">${displayName}</option>`);
+            });
+        } catch (error) {
+            console.error('Error updating remove dropdowns:', error);
+        }
+    }
+
+    async function updateRemoveCollegeDropdown() {
+        const stream = $('#removeCollegeStream').val();
+        
+        try {
+            const colleges = await fetchColleges(stream);
+            const removeCollegeSelect = $('#removeCollege').empty().append('<option value="">Select college to remove</option>');
+            
+            colleges.forEach(college => {
+                removeCollegeSelect.append(`<option value="${college._id}">${college.name}</option>`);
+            });
+        } catch (error) {
+            console.error('Error updating remove college dropdown:', error);
+        }
+    }
+
+    async function clearAllData() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/clear`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                updateAdminMatrix();
+                updateResultsView();
+                updateRemoveDropdowns();
+                updateRemoveCollegeDropdown();
+                clearModal.hide();
+                showAlert('All data cleared.', 'success');
+            } else {
+                const error = await response.json();
+                showAlert(error.message || 'Failed to clear data.', 'danger');
+            }
+        } catch (error) {
+            console.error('Error clearing data:', error);
+            showAlert('Failed to clear data.', 'danger');
+        }
+    }
+
+    function exportToPDF() {
+        const resultsContainer = document.getElementById('resultsContainer');
+        if (!resultsContainer.children.length) {
+            showAlert('No results to export.', 'warning');
+            return;
+        }
+
+        html2canvas(resultsContainer, {
+            scale: 2,
+            backgroundColor: '#ffffff',
+            useCORS: true,
+            logging: false
+        }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4'
+            });
+            const imgWidth = 190;
+            const pageHeight = 277;
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+            let heightLeft = imgHeight;
+            let position = 10;
+
+            pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            while (heightLeft > 0) {
+                pdf.addPage();
+                position = heightLeft - imgHeight + 10;
+                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
+
+            pdf.save('competition_results.pdf');
+            showAlert('PDF exported successfully!', 'success');
+        }).catch(error => {
+            console.error('Error generating PDF:', error);
+            showAlert('Failed to export PDF.', 'danger');
+        });
+    }
+
+    function showPinModal() {
+        $('#adminPassword').val('').removeClass('is-invalid');
+        $('#passwordError').text('');
+        pinModal.show();
+    }
+
+    function checkPassword() {
+        const password = $('#adminPassword').val();
+        if (password === 'sn@sso25') {
+            $('#adminSection').fadeIn();
+            pinModal.hide();
+        } else {
+            $('#passwordError').text('Incorrect password.');
+            $('#adminPassword').addClass('is-invalid');
+        }
+    }
+
+    function exitAdmin() {
+        $('#adminSection').fadeOut();
+        $('#adminPassword').val('');
+    }
+
+    function filterResults() {
+        updateResultsView();
+    }
+
+    function resetFilters() {
+        $('#fStream').val('');
+        $('#fCategory').val('');
+        $('#fCategoryField').hide();
+        updateResultsView();
+    }
+
+    function showAlert(message, type) {
+        const alert = $(`<div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>`);
+        $('.container').prepend(alert);
+        setTimeout(() => alert.alert('close'), 3000);
+    }
+</script>
+</body>
+</html>
